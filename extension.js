@@ -34,7 +34,7 @@ vscode.workspace.onDidChangeTextDocument(event => {
 		}
 
 		var text = editor.document.getText();
-		var url='https://ashishsinghaus-organic-disco-v57rr5x4rqgh6qgr-5000.preview.app.github.dev?lang=' + lang + '&hint= ' + text
+		var url='https://ashishsinghaus-super-trout-rxv66xj97q73pg4p-5000.preview.app.github.dev?lang=' + lang + '&hint= ' + text
 		axios.get(url).then(resp => {
 		editor.edit(editBuilder => {
 			editBuilder.insert(editor.selection.active, '\n' + resp.data);
