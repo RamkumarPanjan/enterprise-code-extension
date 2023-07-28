@@ -1,11 +1,5 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-//import fetch from 'node-fetch';
 const vscode = require('vscode');
 const axios = require('axios').default;
-
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 
 /**
  * @param {vscode.ExtensionContext} context
@@ -14,8 +8,6 @@ const axios = require('axios').default;
 vscode.workspace.onDidChangeTextDocument(event => {
     // Check if the change was a tab press event
     if (event.contentChanges.some(change => change.text === '    ')) {
-        // Implement your logic here
-        vscode.window.showInformationMessage('Enterprise AI Code Companion is in action... ');
 		var lang=''	
 		var editor = vscode.window.activeTextEditor;
 		var filename = editor.document.fileName;
@@ -30,53 +22,44 @@ vscode.workspace.onDidChangeTextDocument(event => {
 			lang='sql'
 		}
 		else {
-			lang='enterprise'
+			lang='unsupported'
+			vscode.window.showErrorMessage('Enterprise AI Code Companion is not supported for ' + file_extension);
 		}
-
-		var text = editor.document.getText();
-		var url='https://ashishsinghaus-super-trout-rxv66xj97q73pg4p-5000.preview.app.github.dev?lang=' + lang + '&hint= ' + text
-		axios.get(url).then(resp => {
-			codeComplete(editor, resp.data)
-		});
-
+		
+		if(lang!='unsupported'){
+			vscode.window.showInformationMessage('Enterprise AI Code Companion is generating the optimized code for you');
+			var text = editor.document.getText();
+			var url='https://ashishsinghaus-super-trout-rxv66xj97q73pg4p-5000.preview.app.github.dev?lang=' + lang + '&hint= ' + text
+			axios.get(url).then(resp => {
+				codeComplete(editor, resp.data)
+			});
+		}
 	}
 });
 
 function codeComplete(editor, text) {
     let index = 0;
+	let words = text.split(' ');
     const intervalId = setInterval(() => {
         editor.edit((editBuilder) => {
-            editBuilder.insert(editor.selection.active, text[index]);
+            editBuilder.insert(editor.selection.active, words[index] + ' ');
         });
         index++;
-        if (index >= text.length) {
+        if (index >= words.length) {
             clearInterval(intervalId);
         }
-    }, 100);
+    }, 50);
 }
 
 function activate(context) {
-
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "enterprise-code-extension" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with  registerCommand
-	// The commandId parameter must match the command field in package.json
+	console.log('Extension "enterprise-code-extension" is running!');
 	let disposable = vscode.commands.registerCommand('enterprise-code-extension.enterprise-code-companion', function () {
-		// The code you place here will be executed every time your command is executed
-
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Enterprise AI Code Companion is on the job');
-		
-		vscode.window.showInformationMessage('Enterprise AI Code Companion is on the job');
+		vscode.window.showInformationMessage('Enterprise AI Code Companion is running...');
 	});
 
 	context.subscriptions.push(disposable);
 }
 
-// This method is called when your extension is deactivated
 function deactivate() {}
 
 module.exports = {
