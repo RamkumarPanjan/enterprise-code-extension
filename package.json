@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "enterprise-code-extension.ecc",
-        "title": "ecc"
+        "command": "enterprise-code-extension.enterprise-code-companion",
+        "title": "enterprise-code-companion"
       }
     ]
   },
